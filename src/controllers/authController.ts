@@ -30,7 +30,7 @@ class AuthController {
   public async getTipoUsuario(req: Request, res: Response): Promise<any> {
     const { id } = req.params;
     const tipoUsuario = await conexion.query(
-      "SELECT tipoUsuario FROM tb_usuario where identidad = ?",
+      "SELECT tipoUsuario FROM cred_usuario where identidad = ?",
       [id]
     );
     if (tipoUsuario.length > 0) {

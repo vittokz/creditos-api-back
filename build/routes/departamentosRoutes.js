@@ -5,7 +5,7 @@ const departamentoController_1 = require("../controllers/departamentoController"
 const validarToken_1 = require("../middleware/validarToken");
 class DepartamentosRoutes {
     constructor() {
-        this.router = express_1.Router();
+        this.router = (0, express_1.Router)();
         this.config();
     }
     config() {

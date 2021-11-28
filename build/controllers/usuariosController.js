@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.usuariosController = void 0;
 const bcrypt = require("bcrypt");
 const database_1 = __importDefault(require("../database"));
+const mailer_1 = require("../mailer");
 class UsuariosController {
     list(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -26,11 +27,52 @@ class UsuariosController {
     getUsuarioByTipo(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { tipo } = req.params;
+            const usuarios = yield database_1.default.query("SELECT * FROM cred_usuario where tipoUsuario <> ?", [tipo]);
+            if (usuarios.length > 0) {
+                return res.json(usuarios);
+            }
+            res.status(404).json({ message: "No existen usuarios" });
+        });
+    }
+    //recoger usuario diferentes a administrador
+    getUsuarioByDiferenteAdmin(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { tipo } = req.params;
             const usuarios = yield database_1.default.query("SELECT * FROM cred_usuario where tipoUsuario like ?", [tipo]);
             if (usuarios.length > 0) {
                 return res.json(usuarios);
             }
             res.status(404).json({ message: "No existen usuarios" });
+        });
+    }
+    //recuperar contraseña
+    getUsuarioForget(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email } = req.params;
+            const usuarioDatos = yield database_1.default.query("SELECT * FROM cred_usuario where email like ?", [email]);
+            if (usuarioDatos.length > 0) {
+                // send mail with defined transport object
+                yield mailer_1.transporter.sendMail({
+                    from: '"Solicitud recuperación de contraseña" <informacion@credivadu.com>',
+                    to: "vittorio15@hotmail.com",
+                    subject: "Se registro solicitud ✔",
+                    text: "hola",
+                    html: `<b>  Información de Acceso al sistema Credivadu :<br>
+        Nombres y apellidos:  ${usuarioDatos[0].nombre}  ${usuarioDatos[0].apellido} <br>
+        Password:  ${usuarioDatos[0].password} <br>
+        Gracias, <br>
+        </b>`, // html body
+                });
+                res.json({
+                    estado: "ok",
+                    message: "Email enviado con exito",
+                });
+            }
+            else {
+                res
+                    .status(404)
+                    .json({ message: "No existe usuario con el email solicitado" });
+            }
         });
     }
     //recoger usuario por identidad
@@ -78,7 +120,7 @@ class UsuariosController {
                 id,
             ]);
             res.json({
-                esdado: "ok",
+                estado: "ok",
                 message: "Usuario fue actualizado",
             });
         });

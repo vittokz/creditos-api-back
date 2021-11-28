@@ -40,7 +40,7 @@ class AuthController {
     getTipoUsuario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const { id } = req.params;
-            const tipoUsuario = yield database_1.default.query("SELECT tipoUsuario FROM tb_usuario where identidad = ?", [id]);
+            const tipoUsuario = yield database_1.default.query("SELECT tipoUsuario FROM cred_usuario where identidad = ?", [id]);
             if (tipoUsuario.length > 0) {
                 return res.json(tipoUsuario);
             }

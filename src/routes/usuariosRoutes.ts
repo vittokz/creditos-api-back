@@ -17,9 +17,19 @@ class UsuariosRoutes {
       usuariosController.getUsuarioByTipo
     );
     this.router.get(
+      "/usuarioByTipoUsuarioDiferenteAdmin/:tipo",
+      verifyToken,
+      usuariosController.getUsuarioByDiferenteAdmin
+    );
+    this.router.get(
       "/usuarioByIdentidad/:identidad",
       verifyToken,
       usuariosController.getUsuarioByIdentidad
+    );
+    this.router.get(
+      "/usuarioForget/:email",
+
+      usuariosController.getUsuarioForget
     );
     this.router.post("/", verifyToken, usuariosController.create);
     this.router.delete("/:id", verifyToken, usuariosController.delete);

@@ -5,6 +5,6 @@ exports.default = {
         host: "localhost",
         user: "root",
         password: "",
-        database: "bd_credito",
+        database: "bd_creditos",
     },
 };
